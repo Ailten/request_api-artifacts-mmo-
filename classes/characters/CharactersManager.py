@@ -1,5 +1,5 @@
 from .Characters import Characters
-from ..primitives.Skills import Skills
+from ..skills.skills import *
 import random
 
 class CharactersManager:
@@ -50,9 +50,9 @@ class CharactersManager:
             # assign skills.
             match i:
                 case 0:
-                    character.skills.append(str(Skills.Fighting))
+                    character.skills.append(SkillFighting)
                 case 1:
-                    character.skills.append(str(Skills.Woodcutting))
+                    character.skills.append(str(Skills.Woodcutting))  # TODO: other skills.
                 case 2:
                     character.skills.append(str(Skills.Mining))
                 case 3:

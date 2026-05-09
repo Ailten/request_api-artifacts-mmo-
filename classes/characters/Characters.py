@@ -1,8 +1,9 @@
 from abc import ABC
+from ..skills.Skills import Skills
 
 class Characters(ABC):
     __pseudo: str
-    skills: list[str]
+    skills: list[Skills]
     __is_error: bool
     priority_actions: list[str|tuple[str,dict]]
 
@@ -48,7 +49,13 @@ class Characters(ABC):
 
     # get the action based on skills.
     def __getSkillAction(self) -> str|tuple[str,dict]|None:
-        
+
+        for s in self.skills:
+            action_from_skill = s.getAction()
+            if action_from_skill == None:
+                continue
+            return action_from_skill
+        return None
     
 
     # eval what action this character should do this update.

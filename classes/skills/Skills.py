@@ -11,3 +11,12 @@ class Skills(ABC):
     
 
     
+    # Fighting="Fighting"  # not a real skill.
+    # Mining="Mining"
+    # Woodcutting="Woodcutting"
+    # Fishing="Fishing"
+    # Weaponcrafting="Weaponcrafting"
+    # Gearcrafting="Gearcrafting"
+    # Jewelrycrafting="Jewelrycrafting"
+    # Cooking="Cooking"
+    # Alchemy="Alchemy"

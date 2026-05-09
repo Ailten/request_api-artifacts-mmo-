@@ -57,9 +57,16 @@ while True:
 
         for c in CharactersManager.characters:
 
-            if len(c.priority_actions) > 0:
-                
+            action_package = c.getActionPackage()
+            action = None
+            body_action = None
+            if action_package is str:
+                action = action_package
+            elif action_package is tuple:
+                action = action_package[0]
+                body_action = action_package[1]
 
+            api.request_action(c.pseudo, action, body_action)
 
         # break update if all character ar errored.
         if len([ c for c in CharactersManager.characters if c.is_error ]) == len(CharactersManager.characters):

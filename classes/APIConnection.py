@@ -1,5 +1,6 @@
 from .tokens.AbstractToken import AbstractToken
 from .primitives.V2 import V2
+from .primitives.Actions import Actions
 import requests
 
 class APIConnection:
@@ -86,6 +87,32 @@ class APIConnection:
             headers=self.__getHeader(),
             json=items_to_drop
         )
+    
+
+    def request_action(self, character_pseudo: str, action: str, body_action: dict|None=None):
+        match action:  # TODO: make it a class abc and sub-class Actions.
+            case 'nothing':
+                return
+            case str(Actions.Move):
+                self.request_move(character_pseudo, body_action['pos'])
+            case str(Actions.Fight):
+                self.request_fight(character_pseudo)
+            case str(Actions.Rest):
+                self.request_rest(character_pseudo)
+            case str(Actions.Gather):
+                self.request_gathering(character_pseudo)
+            case str(Actions.Unequip):
+                self.request_unequip(character_pseudo, body_action['category_equipement'])
+            case str(Actions.Craft):
+                self.request_craft(character_pseudo, body_action['item_to_craft'], body_action.get('quantity', 1))
+            case str(Actions.Equip):
+                self.request_equip(character_pseudo, body_action['equipement'], body_action['category_equipement'])
+            case str(Actions.DropInBank):
+                self.request_drop_in_banque(character_pseudo, body_action['item_to_drop'])
+
+            case _:
+                raise Exception(f'no implement for action {action}')
+                
     
 
     # --- server.
