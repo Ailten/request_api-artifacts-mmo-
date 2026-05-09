@@ -1,9 +1,12 @@
 
+# API blocks.
 from .APIConnection import APIConnection
 from .tokens.Token import Token
-from .CharactersBot import CharactersBot
 
-from .Characters import Characters
-from .CategoryEquipement import CategoryEquipement
+# local file storage.
+from .JsonManager import JsonManager
 
+# primitives and enums.
 from .primitives.V2 import V2
+
+# others.
