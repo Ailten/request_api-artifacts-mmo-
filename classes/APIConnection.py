@@ -96,4 +96,19 @@ class APIConnection:
             url=f'https://api.artifactsmmo.com/',
             headers={ "Accept": "application/json" }
         )
+    
+    def getCharacters(self, acount_name: str):
+        return requests.get(
+            url=f'https://api.artifactsmmo.com/accounts/{acount_name}/characters',
+            headers={ "Accept": "application/json" }
+        )
         
+    def createCharacter(self, character_pseudo: str, skin: str='men1'):
+        return requests.get(
+            url=f'https://api.artifactsmmo.com/characters/create',
+            headers=self.__getHeader(),
+            json={  
+                "name": character_pseudo,
+                "skin": skin
+            }
+        )
