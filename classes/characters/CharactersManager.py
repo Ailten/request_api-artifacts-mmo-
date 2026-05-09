@@ -1,4 +1,5 @@
 from .Characters import Characters
+from ..primitives.Skills import Skills
 import random
 
 class CharactersManager:
@@ -34,3 +35,33 @@ class CharactersManager:
             rand_pseudo += rand_char
         rand_pseudo = rand_pseudo[0].upper() + rand_pseudo[1:]  # upper the first char.
         return rand_pseudo
+
+
+    @classmethod
+    def resetCharacters(cls):
+        CharactersManager.characters = []
+
+    @classmethod
+    def loadCharacters(cls, characters_pseudo: list[str]):
+        for i in range(characters_pseudo):
+            pseudo = characters_pseudo[i]
+            character = Characters(pseudo)
+
+            # assign skills.
+            match i:
+                case 0:
+                    character.skills.append(str(Skills.Fighting))
+                case 1:
+                    character.skills.append(str(Skills.Woodcutting))
+                case 2:
+                    character.skills.append(str(Skills.Mining))
+                case 3:
+                    character.skills.append(str(Skills.Weaponcrafting))
+                    character.skills.append(str(Skills.Gearcrafting))
+                    character.skills.append(str(Skills.Jewelrycrafting))
+                case 4:
+                    character.skills.append(str(Skills.Fighting))
+                    character.skills.append(str(Skills.Cooking))
+
+            CharactersManager.characters.append(character)
+

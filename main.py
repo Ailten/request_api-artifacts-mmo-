@@ -4,6 +4,7 @@ from classes import *
 
 print('--- start ---')
 api = APIConnection(Token)
+CharactersManager.resetCharacters()
 
 
 # re do the check server if all character are errored.
@@ -11,6 +12,7 @@ while True:
 
 
     # verify if data stock localy is matching server data (changing season).
+    print('--- check server ---')
     try:
         response = api.checkServer()
         data = response.json()
@@ -22,10 +24,10 @@ while True:
 
         jm = JsonManager()
         data_server_json = jm.readServerData()
+        characters_json = jm.readCharactersPseudo()
         if data_server_json['data']['season']['name'] != data['data']['season']['name']:
             jm.writeServerData(data)
             characters_data = api.getCharacters(str(AcountName()))
-            characters_json = jm.readCharactersPseudo()
             
             for i in range(len(characters_json)):
                 cj = characters_json[i]
@@ -38,14 +40,28 @@ while True:
 
             # erase/edit jsons, for new season start.
             jm.writeCharactersPseudo(characters_json)
+            CharactersManager.resetCharacters()
+
+        # load characters.
+        if len(CharactersManager.characters) == 0:
+            CharactersManager.loadCharacters(characters_json)
 
     except Exception as e:
         raise e
+    
 
 
     # update.
+    print('--- update ---')
     while True:
 
-        # TODO.
+        for c in CharactersManager.characters:
 
-        break
+            if len(c.priority_actions) > 0:
+                
+
+
+        # break update if all character ar errored.
+        if len([ c for c in CharactersManager.characters if c.is_error ]) == len(CharactersManager.characters):
+            print('--- all characters errored ---')
+            break
