@@ -149,7 +149,7 @@ class APIConnection:
             page_max = None
             while True:
                 response = requests.get(
-                    url=f'https://api.artifactsmmo.com/?layer={layer}&page={page}&size={row_by_page}',
+                    url=f'https://api.artifactsmmo.com/maps/?layer={layer}&page={page}&size={row_by_page}',
                     headers={ "Accept": "application/json"}
                 )
                 data = response.json()
@@ -160,7 +160,7 @@ class APIConnection:
                 yield data['data']
 
                 page += 1
-                if page == page_max:
+                if page >= page_max:
                     break
 
     def getMonsters(self):
@@ -170,7 +170,7 @@ class APIConnection:
         page_max = None
         while True:
             response = requests.get(
-                url=f'https://api.artifactsmmo.com/monsters?page={page}&size={row_by_page}',
+                url=f'https://api.artifactsmmo.com/monsters/?page={page}&size={row_by_page}',
                 headers={ "Accept": "application/json"}
             )
             data = response.json()
@@ -181,5 +181,5 @@ class APIConnection:
             yield data['data']
 
             page += 1
-            if page == page_max:
+            if page >= page_max:
                 break

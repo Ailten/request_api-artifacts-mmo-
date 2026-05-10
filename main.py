@@ -26,12 +26,15 @@ while True:
         data_server_json = jm.readServerData()
         characters_json = jm.readCharactersPseudo()
         if data_server_json['data']['season']['name'] != data['data']['season']['name']:
+
+            print('--- new season ---')
             jm.writeServerData(data)
-            characters_data = api.getCharacters(str(AcountName()))
+            characters_response = api.getCharacters(str(AcountName()))
+            characters_data = characters_response.json()
             
             for i in range(len(characters_json)):
                 cj = characters_json[i]
-                cd = next([ cd for cd in characters_data if cd['name'] == cj ].__iter__(), None)
+                cd = next([ cd for cd in characters_data['data'] if cd['name'] == cj ].__iter__(), None)
 
                 if cd == None:
                     new_pseudo = CharactersManager.generateRandomPseudo()
@@ -48,21 +51,22 @@ while True:
                 jm.writeMaps(*data_maps_filtered)
             MapsManager.resetMapsFind()
 
-            jm.eraseMaps()  # monsters.
+            jm.eraseMonsters()  # monsters.
             for data_monsters in api.getMonsters():
                 jm.writeMonsters(*data_monsters)
             MonstersManager.resetMonsters()
 
-        # load characters.
+        # load from jsons.
+        print('--- load from json ---')
         if len(CharactersManager.characters) == 0:  # characters.
             CharactersManager.loadCharacters(characters_json)
 
         if not MapsManager.isMapsFindFilled():  # maps.
-            data_maps_from_json = JsonManager.readMaps()
+            data_maps_from_json = jm.readMaps()
             MapsManager.fillMapsFind(*data_maps_from_json)
 
         if not MonstersManager.isMonstersFilled():  # monsters.
-            data_monsters = JsonManager.readMonsters()
+            data_monsters = jm.readMonsters()
             MonstersManager.fillMonsters(*data_monsters)
 
 

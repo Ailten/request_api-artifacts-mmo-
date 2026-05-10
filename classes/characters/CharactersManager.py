@@ -43,7 +43,7 @@ class CharactersManager:
 
     @classmethod
     def loadCharacters(cls, characters_pseudo: list[str]):
-        for i in range(characters_pseudo):
+        for i in range(len(characters_pseudo)):
             pseudo = characters_pseudo[i]
             character = Characters(pseudo)
 
@@ -51,17 +51,17 @@ class CharactersManager:
             match i:
                 case 0:
                     character.skills.append(SkillFighting)
-                case 1:
-                    character.skills.append(str(Skills.Woodcutting))  # TODO: other skills.
-                case 2:
-                    character.skills.append(str(Skills.Mining))
-                case 3:
-                    character.skills.append(str(Skills.Weaponcrafting))
-                    character.skills.append(str(Skills.Gearcrafting))
-                    character.skills.append(str(Skills.Jewelrycrafting))
-                case 4:
-                    character.skills.append(str(Skills.Fighting))
-                    character.skills.append(str(Skills.Cooking))
+                #case 1:
+                #    character.skills.append(str(Skills.Woodcutting))  # TODO: other skills.
+                #case 2:
+                #    character.skills.append(str(Skills.Mining))
+                #case 3:
+                #    character.skills.append(str(Skills.Weaponcrafting))
+                #    character.skills.append(str(Skills.Gearcrafting))
+                #    character.skills.append(str(Skills.Jewelrycrafting))
+                #case 4:
+                #    character.skills.append(str(Skills.Fighting))
+                #    character.skills.append(str(Skills.Cooking))
 
             CharactersManager.characters.append(character)
 

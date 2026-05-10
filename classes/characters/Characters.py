@@ -1,10 +1,10 @@
 from abc import ABC
-from ..skills.Skills import Skills
+#from ..skills.Skills import Skills
 from ..primitives.V2 import V2
 
 class Characters(ABC):
     __pseudo: str
-    skills: list[Skills]
+    skills: list  # list['Skills']
     __is_error: bool
     priority_actions: list[str|tuple[str,dict]]
     data_character: dict|None

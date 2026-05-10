@@ -29,5 +29,3 @@ class SkillFighting(Skills):
             return str(Actions.Rest)
         
         return str(Actions.Fight)  # fight.
-
-        #if character.isPos()
