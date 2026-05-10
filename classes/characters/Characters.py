@@ -1,13 +1,18 @@
 from abc import ABC
-#from ..skills.Skills import Skills
 from ..primitives.V2 import V2
+from datetime import datetime, timezone
+
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from ..skills.Skills import Skills
 
 class Characters(ABC):
     __pseudo: str
-    skills: list  # list['Skills']
+    skills: list['Skills']
     __is_error: bool
     priority_actions: list[str|tuple[str,dict]]
     data_character: dict|None
+    cooldown: datetime
 
     def __init__(self, pseudo: str):
         self.__pseudo = pseudo
@@ -15,6 +20,7 @@ class Characters(ABC):
         self.__is_error = False
         self.priority_actions = []
         self.data_character = None
+        self.cooldown = datetime.now(timezone.utc)
 
     @property
     def pseudo(self) -> str:
@@ -23,6 +29,9 @@ class Characters(ABC):
     @property
     def is_error(self) -> bool:
         return self.__is_error
+    @is_error.setter
+    def is_error(self, value: bool):
+        self.__is_error = value
     
     @property
     def pos(self) -> 'V2':
@@ -78,7 +87,7 @@ class Characters(ABC):
     def __getSkillAction(self) -> str|tuple[str,dict]|None:
 
         for s in self.skills:
-            action_from_skill = s.getAction()
+            action_from_skill = s.getAction(self)
             if action_from_skill == None:
                 continue
             return action_from_skill
@@ -93,6 +102,15 @@ class Characters(ABC):
             self.__getSkillAction() or
             'nothing'
         )
+    
+
+    # --->
+
+
+    # reset cooldown (for next call api), based on data_character.
+    def setCooldown(self):
+        date_str = self.data_character['cooldown_expiration']
+        self.cooldown = datetime.fromisoformat(date_str.replace('Z', '+00:00'))  # cast string to datetime.
     
 
     # ---->

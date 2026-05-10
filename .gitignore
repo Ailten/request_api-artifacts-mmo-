@@ -2,4 +2,4 @@
 .env
 **/__pycache__/
 .venv/
-json_data/**
+json_data/*.json

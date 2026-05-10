@@ -40,40 +40,46 @@ class JsonManager:
 
     def eraseMaps(self):
         with open('json_data/maps.json', 'w', encoding='utf-8') as f:
-            f.write('')
+            f.write('[\n')
+    def closeMaps(self):
+        with open('json_data/maps.json', 'a', encoding='utf-8') as f:
+            f.write('\n]')
 
-    def writeMaps(self, *data_maps: dict):
+    def writeMaps(self, *data_maps: dict, is_first_write: bool=False):
         with open('json_data/maps.json', 'a', encoding='utf-8') as f:
             for map in data_maps:
                 map_str = json.dumps(map)
-                map_str += '\n'  # separator.
+                if is_first_write:
+                    self.eraseMaps()
+                    is_first_write = False
+                else:
+                    map_str = ',\n' + map_str  # separator.
                 f.write(map_str)
 
     def readMaps(self) -> list[dict]:
         with open('json_data/maps.json', 'r', encoding='utf-8') as f:
             maps_str = f.read()
-            if maps_str[-1] == '\n':  # remove last separator.
-                maps_str = maps_str[:-1]
-            maps_str = maps_str.replace('\n', ',')
-            maps_str = '[' + maps_str + ']'
             return json.loads(maps_str)
         
     def eraseMonsters(self):
         with open('json_data/monsters.json', 'w', encoding='utf-8') as f:
-            f.write('')
+            f.write('[\n')
+    def closeMonsters(self):
+        with open('json_data/monsters.json', 'a', encoding='utf-8') as f:
+            f.write('\n]')
         
-    def writeMonsters(self, *data_monsters):
+    def writeMonsters(self, *data_monsters, is_first_write: bool=False):
         with open('json_data/monsters.json', 'a', encoding='utf-8') as f:
             for monster in data_monsters:
                 monster_str = json.dumps(monster)
-                monster_str += '\n'  # separator.
+                if is_first_write:
+                    self.eraseMonsters()
+                    is_first_write = False
+                else:
+                    monster_str = ',\n' + monster_str  # separator.
                 f.write(monster_str)
 
-    def readMonsters(self):
+    def readMonsters(self) -> list[dict]:
         with open('json_data/monsters.json', 'r', encoding='utf-8') as f:
             monster_str = f.read()
-            if monster_str[-1] == '\n':  # remove last separator.
-                monster_str = monster_str[:-1]
-            monster_str = monster_str.replace('\n', ',')
-            monster_str = '[' + monster_str + ']'
             return json.loads(monster_str)

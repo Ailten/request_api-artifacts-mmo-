@@ -91,25 +91,23 @@ class APIConnection:
     
 
     def request_action(self, character_pseudo: str, action: str, body_action: dict|None=None):
-        match action:  # TODO: make it a class abc and sub-class Actions.
-            case 'nothing':
-                return
+        match action:
             case str(Actions.Move):
-                self.request_move(character_pseudo, body_action['pos'])
+                return self.request_move(character_pseudo, body_action['pos'])
             case str(Actions.Fight):
-                self.request_fight(character_pseudo)
+                return self.request_fight(character_pseudo)
             case str(Actions.Rest):
-                self.request_rest(character_pseudo)
+                return self.request_rest(character_pseudo)
             case str(Actions.Gather):
-                self.request_gathering(character_pseudo)
+                return self.request_gathering(character_pseudo)
             case str(Actions.Unequip):
-                self.request_unequip(character_pseudo, body_action['category_equipement'])
+                return self.request_unequip(character_pseudo, body_action['category_equipement'])
             case str(Actions.Craft):
-                self.request_craft(character_pseudo, body_action['item_to_craft'], body_action.get('quantity', 1))
+                return self.request_craft(character_pseudo, body_action['item_to_craft'], body_action.get('quantity', 1))
             case str(Actions.Equip):
-                self.request_equip(character_pseudo, body_action['equipement'], body_action['category_equipement'])
+                return self.request_equip(character_pseudo, body_action['equipement'], body_action['category_equipement'])
             case str(Actions.DropInBank):
-                self.request_drop_in_banque(character_pseudo, body_action['item_to_drop'])
+                return self.request_drop_in_banque(character_pseudo, body_action['item_to_drop'])
 
             case _:
                 raise Exception(f'no implement for action {action}')
@@ -121,19 +119,19 @@ class APIConnection:
     # get data from server (about season).
     def checkServer(self):
         return requests.get(
-            url=f'https://api.artifactsmmo.com/',
+            url=f'{self.__base_url}/',
             headers={ "Accept": "application/json" }
         )
     
     def getCharacters(self, acount_name: str):
         return requests.get(
-            url=f'https://api.artifactsmmo.com/accounts/{acount_name}/characters',
+            url=f'{self.__base_url}/accounts/{acount_name}/characters',
             headers={ "Accept": "application/json" }
         )
         
     def createCharacter(self, character_pseudo: str, skin: str='men1'):
         return requests.get(
-            url=f'https://api.artifactsmmo.com/characters/create',
+            url=f'{self.__base_url}/characters/create',
             headers=self.__getHeader(),
             json={  
                 "name": character_pseudo,
@@ -149,7 +147,7 @@ class APIConnection:
             page_max = None
             while True:
                 response = requests.get(
-                    url=f'https://api.artifactsmmo.com/maps/?layer={layer}&page={page}&size={row_by_page}',
+                    url=f'{self.__base_url}/maps/?layer={layer}&page={page}&size={row_by_page}',
                     headers={ "Accept": "application/json"}
                 )
                 data = response.json()
@@ -170,7 +168,7 @@ class APIConnection:
         page_max = None
         while True:
             response = requests.get(
-                url=f'https://api.artifactsmmo.com/monsters/?page={page}&size={row_by_page}',
+                url=f'{self.__base_url}/monsters/?page={page}&size={row_by_page}',
                 headers={ "Accept": "application/json"}
             )
             data = response.json()
@@ -183,3 +181,9 @@ class APIConnection:
             page += 1
             if page >= page_max:
                 break
+
+    def getCharacterData(self, character_pseudo: str):
+        return requests.get(
+            url=f'{self.__base_url}/characters/{character_pseudo}/',
+            headers={ "Accept": "application/json"}
+        )

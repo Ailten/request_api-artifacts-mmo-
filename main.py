@@ -1,5 +1,7 @@
 
 from classes import *
+import time
+from datetime import datetime, timezone
 
 
 print('--- start ---')
@@ -45,21 +47,31 @@ while True:
             jm.writeCharactersPseudo(characters_json)  # characters.
             CharactersManager.resetCharacters()
 
-            jm.eraseMaps()  # maps.
+            is_first_map = True  # maps.
             for data_maps in api.getMaps():
                 data_maps_filtered = MapsManager.filterEmptyMap(*data_maps)
-                jm.writeMaps(*data_maps_filtered)
+                if len(data_maps_filtered) == 0:
+                    continue
+                jm.writeMaps(*data_maps_filtered, is_first_write=is_first_map)
+                is_first_map = False
+            jm.closeMaps()
             MapsManager.resetMapsFind()
 
-            jm.eraseMonsters()  # monsters.
+            is_first_monster = True   # monsters.
             for data_monsters in api.getMonsters():
-                jm.writeMonsters(*data_monsters)
+                jm.writeMonsters(*data_monsters, is_first_write=is_first_monster)
+                is_first_monster = False
+            jm.closeMonsters()
             MonstersManager.resetMonsters()
 
         # load from jsons.
         print('--- load from json ---')
         if len(CharactersManager.characters) == 0:  # characters.
             CharactersManager.loadCharacters(characters_json)
+            for c in CharactersManager.characters:
+                response = api.getCharacterData(c.pseudo)
+                c_data_character = response.json()
+                c.data_character = c_data_character['data']
 
         if not MapsManager.isMapsFindFilled():  # maps.
             data_maps_from_json = jm.readMaps()
@@ -80,19 +92,66 @@ while True:
     while True:
 
         for c in CharactersManager.characters:
+            
+            if c.is_error:
+                continue
+            if c.cooldown > datetime.now(timezone.utc):
+                continue
 
             action_package = c.getActionPackage()
             action = None
             body_action = None
-            if action_package is str:
+            if type(action_package) == str:
                 action = action_package
-            elif action_package is tuple:
+            elif type(action_package) == tuple:
                 action = action_package[0]
                 body_action = action_package[1]
 
-            api.request_action(c.pseudo, action, body_action)
+            if action == 'nothing':
+                continue
+
+            try:
+
+                response = api.request_action(c.pseudo, action, body_action)
+                data_action = response.json()
+                
+                if "error" in data_action:
+                    if "message" in data_action["error"]:
+                        raise Exception(data_action["error"]["message"])
+                    raise Exception(data_action["error"])
+                
+                if 'character' in data['data']:
+                    c.data_character = data['data']['character']
+                elif 'characters' in data['data']:
+                    data_characters = data['data']['characters']
+                    data_characters = [ cs for cs in data_characters if cs['name'] == str(c.pseudo)]
+                    if len(data_characters) != 1:
+                        raise Exception(f'data[\'characters\'] has no character named {c.pseudo}')
+                    c.data_character = data_characters[0]
+                else:
+                    raise Exception(f'data[\'characters\'] has no character named {c.pseudo}')
+
+            except Exception as e:
+
+                c.is_error = True
+                print('/!\\ --- ERROR --- /!\\')
+                print(f'character : {c.pseudo}')
+                print(f'error : {e}')
+                print(f'action try : {action_package}')
+                print('---------------------')
+
+                if api.is_debug:
+                    raise e
+                
+            c.setCooldown()
+
 
         # break update if all character ar errored.
         if len([ c for c in CharactersManager.characters if c.is_error ]) == len(CharactersManager.characters):
             print('--- all characters errored ---')
             break
+
+        time.sleep(1)
+
+
+# TODO : debug 'Rate limit exceeded: 10000 per 1 hour'.

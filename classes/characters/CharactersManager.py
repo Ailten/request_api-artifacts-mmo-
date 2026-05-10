@@ -50,7 +50,7 @@ class CharactersManager:
             # assign skills.
             match i:
                 case 0:
-                    character.skills.append(SkillFighting)
+                    character.skills.append(SkillFighting())
                 #case 1:
                 #    character.skills.append(str(Skills.Woodcutting))  # TODO: other skills.
                 #case 2:
