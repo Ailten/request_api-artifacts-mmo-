@@ -1,17 +1,20 @@
 from abc import ABC
 from ..skills.Skills import Skills
+from ..primitives.V2 import V2
 
 class Characters(ABC):
     __pseudo: str
     skills: list[Skills]
     __is_error: bool
     priority_actions: list[str|tuple[str,dict]]
+    data_character: dict|None
 
     def __init__(self, pseudo: str):
         self.__pseudo = pseudo
         self.skills = []
         self.__is_error = False
         self.priority_actions = []
+        self.data_character = None
 
     @property
     def pseudo(self) -> str:
@@ -20,6 +23,30 @@ class Characters(ABC):
     @property
     def is_error(self) -> bool:
         return self.__is_error
+    
+    @property
+    def pos(self) -> 'V2':
+        return V2(self.data_character['x'], self.data_character['y'])
+    
+    @property
+    def inventory(self) -> list[dict]:
+        return self.data_character['inventory']
+    
+    @property
+    def inventoryQuantityFill(self) -> int:
+        return sum([ e['quantity'] for e in self.inventory ])
+    
+    @property
+    def inventoryMaxCapacity(self) -> int:
+        return self.data_character['inventory_max_items']
+    
+    @property
+    def hp(self) -> int:
+        return self.data_character['hp']
+    
+    @property
+    def maxHp(self) -> int:
+        return self.data_character['max_hp']
     
 
     # ---->
@@ -66,6 +93,22 @@ class Characters(ABC):
             self.__getSkillAction() or
             'nothing'
         )
+    
+
+    # ---->
 
 
+    def isAtPos(self, map_pos: 'V2') -> bool:
+        return self.pos == map_pos
+    
+    def isInventoryFull(self) -> bool:
+        return self.inventoryQuantityFill == self.inventoryMaxCapacity
+    
+    def getPurcentInventoryFull(self) -> float:
+        return self.inventoryQuantityFill / self.inventoryMaxCapacity
 
+    def getPurcentHp(self) -> float:
+        return self.hp / self.maxHp
+
+    def getHpLeft(self) -> int:
+        return self.maxHp - self.hp

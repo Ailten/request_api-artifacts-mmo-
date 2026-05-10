@@ -1,6 +1,7 @@
 from .tokens.AbstractToken import AbstractToken
 from .primitives.V2 import V2
 from .primitives.Actions import Actions
+from .maps.MapsLayer import MapsLayer
 import requests
 
 class APIConnection:
@@ -139,3 +140,46 @@ class APIConnection:
                 "skin": skin
             }
         )
+    
+    def getMaps(self):
+        row_by_page = 100
+        for layer in MapsLayer:
+            
+            page = 1
+            page_max = None
+            while True:
+                response = requests.get(
+                    url=f'https://api.artifactsmmo.com/?layer={layer}&page={page}&size={row_by_page}',
+                    headers={ "Accept": "application/json"}
+                )
+                data = response.json()
+
+                if page_max == None:
+                    page_max = data['pages']
+
+                yield data['data']
+
+                page += 1
+                if page == page_max:
+                    break
+
+    def getMonsters(self):
+        row_by_page = 50
+
+        page = 1
+        page_max = None
+        while True:
+            response = requests.get(
+                url=f'https://api.artifactsmmo.com/monsters?page={page}&size={row_by_page}',
+                headers={ "Accept": "application/json"}
+            )
+            data = response.json()
+
+            if page_max == None:
+                page_max = data['pages']
+
+            yield data['data']
+
+            page += 1
+            if page == page_max:
+                break

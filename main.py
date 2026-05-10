@@ -39,12 +39,32 @@ while True:
                     characters_json[i] = new_pseudo
 
             # erase/edit jsons, for new season start.
-            jm.writeCharactersPseudo(characters_json)
+            jm.writeCharactersPseudo(characters_json)  # characters.
             CharactersManager.resetCharacters()
 
+            jm.eraseMaps()  # maps.
+            for data_maps in api.getMaps():
+                data_maps_filtered = MapsManager.filterEmptyMap(*data_maps)
+                jm.writeMaps(*data_maps_filtered)
+            MapsManager.resetMapsFind()
+
+            jm.eraseMaps()  # monsters.
+            for data_monsters in api.getMonsters():
+                jm.writeMonsters(*data_monsters)
+            MonstersManager.resetMonsters()
+
         # load characters.
-        if len(CharactersManager.characters) == 0:
+        if len(CharactersManager.characters) == 0:  # characters.
             CharactersManager.loadCharacters(characters_json)
+
+        if not MapsManager.isMapsFindFilled():  # maps.
+            data_maps_from_json = JsonManager.readMaps()
+            MapsManager.fillMapsFind(*data_maps_from_json)
+
+        if not MonstersManager.isMonstersFilled():  # monsters.
+            data_monsters = JsonManager.readMonsters()
+            MonstersManager.fillMonsters(*data_monsters)
+
 
     except Exception as e:
         raise e

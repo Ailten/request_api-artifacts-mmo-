@@ -29,7 +29,22 @@ class V2(list[int|float]):
         yield self[1]
     
     # cast dictionary.
-    def __dict__(self):
+    def __dict__(self) -> dict:
         return { 'x': self.x, 'y': self.y }
+    
+    # operator equality.
+    def __eq__(self, v2_b: 'V2') -> bool:
+        return (
+            self.x == v2_b.x and
+            self.y == v2_b.y
+        )
 
         
+    # --->
+
+    # return the distance separated two V2 (in square path).
+    def distTo(self, v2_b) -> int|float:
+        return (
+            abs(self.x - v2_b.x) +
+            abs(self.y - v2_b.y)
+        )
