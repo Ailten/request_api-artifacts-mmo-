@@ -21,14 +21,22 @@ class MapsManager:
 
     @classmethod
     def getMapPos(cls, 
-        interactions_contend: str,
-        layer: str="overworld",
+        interactions_contend: str|None=None,
+        layer: str|None=None,
+        monster_name: str|None = None,
         closest_to_pos: V2|None = None
     ) -> V2:
-        maps_filtered = [ dm for dm in MapsManager.__maps_find if (
-            dm['interactions']['contend'] == interactions_contend and
-            dm['layer'] == layer
-        ) ]
+        maps_filtered = MapsManager.__maps_find
+        
+        if interactions_contend != None:
+            maps_filtered = [ dm for dm in maps_filtered if dm['interactions']['contend']['type'] == interactions_contend ]
+        if layer != None:
+            maps_filtered = [ dm for dm in maps_filtered if dm['layer'] == layer ]
+        if monster_name != None:
+            maps_filtered = [ dm for dm in maps_filtered if (
+                dm['interactions']['contend']['type'] == 'monster' and
+                dm['interactions']['contend']['code'] == monster_name
+            ) ]
 
         if closest_to_pos != None:
             maps_filtered.sort(key=lambda dm: closest_to_pos.distTo(V2(dm['x'], dm['y'])))
@@ -36,6 +44,18 @@ class MapsManager:
         if len(maps_filtered) == 0:
             return None
         return V2(maps_filtered[0]['x'], maps_filtered[0]['y'])
+    
+    @classmethod
+    def getMapPosBank(cls,
+        layer: str|None=None,
+        closest_to_pos: V2|None = None
+    ) -> V2:
+        return MapsManager.getMapPos(
+            interactions_contend='bank',
+            layer=layer,
+            closest_to_pos=closest_to_pos
+        )
+
 
 
     # --->
