@@ -154,4 +154,5 @@ while True:
         time.sleep(1)
 
 
-# TODO : debug 'Rate limit exceeded: 10000 per 1 hour'.
+# TODO: debug 'Rate limit exceeded: 10000 per 1 hour'.
+# TODO: infinit loop somewhere after the json load.
