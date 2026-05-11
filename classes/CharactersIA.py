@@ -142,7 +142,7 @@ class CharactersIA(IntEnum):
                 
                 return (Action.Crafting, {
                     'item_to_craft': 'ash_plank',
-                    'quantity': next([ i['quantity'] for i in characterData['inventory'] if i['code'] == 'ash_plank' ], 0) // 10
+                    'quantity': next([ i['quantity'] for i in characterData['inventory'] if i['code'] == 'ash_wood' ].__iter__(), 0) // 10
                 })
             
             case CharactersIA.CraftCopperOre:
