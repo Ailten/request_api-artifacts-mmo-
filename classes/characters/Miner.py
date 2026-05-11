@@ -12,7 +12,7 @@ class Miner(Characters):
     item_crafting: str
     craft_ingredient_quantity: int
 
-    def __init__(self, pseudo: str, pos_to_mine: V2=V2(2,0), pos_to_craft: V2=V2(-2,-3)):
+    def __init__(self, pseudo: str, pos_to_mine: V2=V2(2,0), pos_to_craft: V2=V2(1,5)):
         super().__init__(pseudo)
         self.pos_to_mine = pos_to_mine
         self.pos_to_craft = pos_to_craft
