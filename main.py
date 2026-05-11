@@ -11,7 +11,7 @@ all_characters = [
     Fighter('RedHat', V2(0, -1)),
     WoodCuter('Askunk'),
     Miner('Digidix'),
-    Characters('Craftax'),
+    Characters('Craftax'),  # TODO: make as alchimist.
     Fighter('Fedora')
 ]
 for c in all_characters:
