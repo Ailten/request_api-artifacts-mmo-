@@ -50,7 +50,7 @@ class Miner(Characters):
                 self.status = 'stocking'
                 return (str(Actions.Craft, {
                     'item_to_craft': self.item_crafting,
-                    'quantity': next([ i['quantity'] for i in self.inventory() if i['code'] == self.item_minning ].__iter__(), 0) // self.craft_ingredient_quantity
+                    'quantity': next([ i['quantity'] for i in self.inventory if i['code'] == self.item_minning ].__iter__(), 0) // self.craft_ingredient_quantity
                 }))
             
             case 'stocking':  # bank.
