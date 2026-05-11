@@ -127,7 +127,7 @@ class CharactersIA(IntEnum):
                         return (Action.DropInventoryInBanque, {
                             'inventory': [{
                                 'code': 'ash_plank',
-                                'quantity': next([ i['quantity'] for i in characterData['inventory'] if i['code'] == 'ash_plank' ], 0)
+                                'quantity': next([ i['quantity'] for i in characterData['inventory'] if i['code'] == 'ash_plank' ].__iter__(), 0)
                             }]
                         })
                     return (Action.Move, {'pos_tile': V2(4, 1)})
