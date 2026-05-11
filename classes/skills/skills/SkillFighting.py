@@ -9,7 +9,7 @@ class SkillFighting(Skills):
     data_monster: dict|None
     pos_to_fight: V2|None
 
-    def __init__(self, data_monster: dict|None):
+    def __init__(self, data_monster: dict|None=None):
         self.data_monster = data_monster or MonstersManager.getMonster(level_max=1)
 
 
