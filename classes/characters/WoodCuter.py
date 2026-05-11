@@ -48,10 +48,10 @@ class WoodCuter(Characters):
                     return (str(Actions.Move), { 'pos': self.pos_to_craft})
                 
                 self.status = 'stocking'
-                return (str(Actions.Craft, {
+                return (str(Actions.Craft), {
                     'item_to_craft': self.item_crafting,
                     'quantity': next([ i['quantity'] for i in self.inventory if i['code'] == self.item_cutting ].__iter__(), 0) // self.craft_ingredient_quantity
-                }))
+                })
             
             case 'stocking':  # bank.
 
@@ -61,14 +61,7 @@ class WoodCuter(Characters):
                 self.status = 'cutting'
                 return (str(Actions.DropInBank), {
                     'item_to_drop': [ i for i in self.inventory if (
-                        i['type'] == 'ressource' and
-                        (
-                            i['code'] == self.item_crafting or
-                            (  # drop also other ressource from minning.
-                                i['subtype'] == 'woodcutting' and 
-                                i['code'] != self.item_minning
-                            )
-                        )
+                        i['code'] == self.item_crafting
                     ) ]
                 })
 
