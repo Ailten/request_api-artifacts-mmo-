@@ -24,7 +24,7 @@ class Fighter(Characters):
                 # drop in bank.
                 return (str(Actions.DropInBank), {
                     'item_to_drop': [ i for i in self.inventory if (
-                        i['type'] == 'ressource' and
+                        i['type'] == 'ressource' and  # TODO: débug (?) key error: inventory has only code and quantity.
                         i['subtype'] == 'mob'
                     ) ]
                 })
