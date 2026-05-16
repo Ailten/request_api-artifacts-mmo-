@@ -72,7 +72,7 @@ class Crafter(Characters):
                             item_match['quantity'] += itgc['quantity']
                         self.quantity_to_craft_now += 1
 
-                if self.quantity_to_craft_now == 0:
+                if self.quantity_to_craft_now == 0:  # TODO: not wait, but make other task.
                     self.setScriptedWait(30)
                     return 'nothing'
                 
