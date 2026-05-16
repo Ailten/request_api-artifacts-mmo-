@@ -78,3 +78,4 @@ while True:
                 
         c.setCooldown()
 
+# --->
