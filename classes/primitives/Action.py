@@ -9,6 +9,8 @@ class Actions(str, Enum):
     Equip='equip'
     Craft='craft'
     DropInBank='DropInBank'
+    WithDrawBank='WithDrawBank'
+    Recycle='Recycle'
 
     def __str__(self) -> str:
         return super().__str__()

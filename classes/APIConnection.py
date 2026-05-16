@@ -81,11 +81,27 @@ class APIConnection:
         )
     
     # drop items in banque.
-    def request_drop_in_banque(self, character_pseudo: str, items_to_drop: list):
+    def request_drop_in_banque(self, character_pseudo: str, items_to_drop: list[dict]):
         return requests.post(
             url=f'{self.__base_url}/my/{character_pseudo}/action/bank/deposit/item', 
             headers=self.__getHeader(),
             json=items_to_drop
+        )
+    
+    # get list items from bank.
+    def request_get_bank_items(self, character_pseudo: str, items_to_get: list[dict]):
+        return requests.post(
+            url=f'{self.__base_url}/my/{character_pseudo}/action/bank/withdraw/item', 
+            headers=self.__getHeader(),
+            json=items_to_get
+        )
+    
+    # recycle items (from inventory character).
+    def request_recycle(self, character_pseudo: str, items_to_recycle: str, items_quantity: int=1):
+        return requests.post(
+            url=f'{self.__base_url}/my/{character_pseudo}/action/recycling', 
+            headers=self.__getHeader(),
+            json={ 'code': items_to_recycle, 'quantity': items_quantity }
         )
     
 
@@ -107,7 +123,21 @@ class APIConnection:
                 return self.request_equip(character_pseudo, body_action['equipement'], body_action['category_equipement'])
             case str(Actions.DropInBank):
                 return self.request_drop_in_banque(character_pseudo, body_action['item_to_drop'])
+            case str(Actions.WithDrawBank):
+                return self.request_get_bank_items(character_pseudo, body_action['item_to_get'])
+            case str(Actions.Recycle):
+                return self.request_recycle(character_pseudo, body_action['items_to_recycle'], body_action['items_quantity'])
 
             case _:
                 raise Exception(f'no implement for action {action}')
                 
+    
+    # ----> acount request.
+
+
+    # get bank data.
+    def request_get_bank_data(self):
+        return requests.get(
+            url=f'{self.__base_url}/my/bank/items?size={100}',
+            headers=self.__getHeader()
+        )

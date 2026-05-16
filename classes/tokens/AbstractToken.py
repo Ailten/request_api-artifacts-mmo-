@@ -1,7 +1,7 @@
 from abc import ABC
 
 class AbstractToken(ABC):
-    the_token_init: 'AbstractToken'|None = None
+    the_token_init: 'AbstractToken|None' = None
     token: str
 
     # singleton.
